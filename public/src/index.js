@@ -8,7 +8,7 @@ let roundWon = false
 // Calling Cells
 const cells = document.querySelectorAll('.cell')
 cells.forEach(el => el.addEventListener('click', () => {
-    if (!player || el.textContent) return
+    if (!player || roundWon || el.textContent) return
 
     // Set game state
     const cellId = parseInt(el.id - 1)
@@ -18,7 +18,7 @@ cells.forEach(el => el.addEventListener('click', () => {
     // Check if someone has won
     resultWin(player)
     if (roundWon) return
-    
+
     // If not, next turn
     el.style.cursor = 'default'
     player = player === 'X' ? 'O' : 'X'
@@ -68,7 +68,6 @@ const checkEl = currPlayer => {
 
     // Declare winner
     playerEl.textContent = `${currPlayer} Wins!`
-    player = ''
 }
 
 // Start - Reset
@@ -76,7 +75,7 @@ document.querySelector('.start').addEventListener('click', () => {
     gameState = ['', '', '', '', '', '', '', '', '']
     cells.forEach(el => el.textContent = '')
     cells.forEach(el => el.style.cursor = 'pointer')
-    player = 'X'
+    player = player == 'X' ? 'O' : 'X' 
     roundWon = false
     playerEl.textContent = `Turn: ${player}`
     document.querySelector('.button').style.display = 'none'
