@@ -1,5 +1,3 @@
-const regeneratorRuntime = require('regenerator-runtime')
-
 // player start
 let player = ''
 const playerEl = document.querySelector('.message')
@@ -13,12 +11,11 @@ cells.forEach(el => el.addEventListener('click', () => {
     if (!player || el.textContent) return
 
     // Set game state
-    const cellId = parseInt(el.id)
+    const cellId = parseInt(el.id - 1)
     gameState[cellId] = player
     el.textContent = player
 
     // Check if someone has won
-    console.log(player)
     resultWin(player)
     if (roundWon) return
     
@@ -29,20 +26,21 @@ cells.forEach(el => el.addEventListener('click', () => {
 }))
 
 const winningConditions = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9],
-    [1, 5, 9],
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 4, 8],
+    [0, 3, 6],
     [1, 4, 7],
     [2, 5, 8],
-    [3, 6, 9],
-    [3, 5, 7]
+    [2, 4, 6]
 ]
 
 const resultWin = currPlayer => {
     const cells = document.querySelectorAll('.cell')
     let result = false
 
+    // each call to cells, check if the gameState 
     cells.forEach(() => {
         for (let i = 0; i <= 7; i++) {
             const winCondition = winningConditions[i]
@@ -57,16 +55,10 @@ const resultWin = currPlayer => {
             }
         }
     })
-
+    // If result then currPlayer wins!
     if (result) checkEl(currPlayer)
-
-    // Check if values are filled, if so, tie game
-    let tie = true
-    cells.forEach(el => {
-        if (tie && !el.textContent) { tie = false }
-    })
-
-    if (tie) checkEl('No One')
+    // Check if all values are filled, if so, No one wins!
+    if (gameState.every(Boolean) && !result) checkEl('No One')
 }
 
 const checkEl = currPlayer => {
@@ -79,7 +71,7 @@ const checkEl = currPlayer => {
     player = ''
 }
 
-// start - reset
+// Start - Reset
 document.querySelector('.start').addEventListener('click', () => {
     gameState = ['', '', '', '', '', '', '', '', '']
     cells.forEach(el => el.textContent = '')
